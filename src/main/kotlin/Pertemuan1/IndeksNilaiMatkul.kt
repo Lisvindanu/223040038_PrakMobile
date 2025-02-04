@@ -4,8 +4,9 @@ data class IndeksNilaiMatkul(val ipk: Int? = null,
                         val nama: String,
                         val nrp: String)
 fun Int?.nilaiKeGrade() : String {
+    if (this == null) return "Nilai harus diisi"
+    if(this > 100) return "Nilai diluar jangkauan"
     return when  (this){
-        null -> "Nilai tidak boleh kosong"
         in 80..100 -> "A"
         in 70..79 -> "AB"
         in 60..69 -> "B"
@@ -19,11 +20,10 @@ fun Int?.nilaiKeGrade() : String {
 
 fun main() {
    val listMahasiswa = listOf(
-       IndeksNilaiMatkul(100 ,"Lisvindanu", "223040038"),
-       IndeksNilaiMatkul(75 ,"Sasuke", "223040098"),
-       IndeksNilaiMatkul(50 ,"Naruto", "223040108"),
-       IndeksNilaiMatkul(30, "Shikamaru", "223040088"),
-       IndeksNilaiMatkul(null, "sakura", "223040088"),
+       IndeksNilaiMatkul(77 ,"Lisvindanu", "223040038"),
+       IndeksNilaiMatkul(110 ,"Sasuke", "223040098"),
+       IndeksNilaiMatkul(null ,"Naruto", "223040108"),
+       IndeksNilaiMatkul(25, "Shikamaru", "223040088")
    )
 
     for (mahasiswa in listMahasiswa){
