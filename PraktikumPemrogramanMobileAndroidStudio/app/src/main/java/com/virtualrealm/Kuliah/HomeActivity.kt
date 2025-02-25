@@ -32,13 +32,14 @@ import com.virtualrealm.Kuliah.ui.theme.Pink40
 import com.virtualrealm.Kuliah.ui.theme.Purple80
 import kotlinx.coroutines.runBlocking
 
+
 class HomeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // Get user data passed from login
+        // Ambil data user dari intent
         val username = intent.getStringExtra("USERNAME") ?: ""
         val nama = intent.getStringExtra("NAMA") ?: ""
         val email = intent.getStringExtra("EMAIL") ?: ""
@@ -54,7 +55,17 @@ class HomeActivity : ComponentActivity() {
                         email = email,
                         alamat = alamat,
                         nomorTelepon = nomorTelepon,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        onProfileClick = {
+                            val intent = Intent(this, ProfileActivity::class.java).apply {
+                                putExtra("USERNAME", username)
+                                putExtra("NAMA", nama)
+                                putExtra("EMAIL", email)
+                                putExtra("ALAMAT", alamat)
+                                putExtra("NOMOR_TELEPON", nomorTelepon)
+                            }
+                            startActivity(intent)
+                        }
                     )
                 }
             }
@@ -69,7 +80,8 @@ fun HomeScreen(
     email: String = "",
     alamat: String = "",
     nomorTelepon: String = "",
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onProfileClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -99,15 +111,12 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Add your menu or main content here
         MenuButtons(
+            onProfileClick = onProfileClick,
             onLogout = {
-                // Navigate back to login screen
                 val intent = Intent(context, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 context.startActivity(intent)
-
-                // If activity context is available, finish it
                 (context as? ComponentActivity)?.finish()
             }
         )
@@ -120,6 +129,8 @@ fun MenuButtons(onProfileClick: () -> Unit = {}, onLogout: () -> Unit = {}) {
         containerColor = Purple80,
         contentColor = Color.White
     )
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -137,13 +148,10 @@ fun MenuButtons(onProfileClick: () -> Unit = {}, onLogout: () -> Unit = {}) {
             )
         }
 
-
         Button(
-            onClick = { /* Navigate to another feature */ },
+            onClick = { /* navigasi ke fitur lainnya */ },
             colors = buttonColors,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
         ) {
             Text(
                 text = "Fitur Lainnya",
@@ -153,11 +161,12 @@ fun MenuButtons(onProfileClick: () -> Unit = {}, onLogout: () -> Unit = {}) {
         }
 
         Button(
-            onClick = { /* Navigate to settings */ },
+            onClick = {
+                val intent = Intent(context, SettingsActivity::class.java)
+                context.startActivity(intent)
+            },
             colors = buttonColors,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
         ) {
             Text(
                 text = "Pengaturan",
@@ -174,9 +183,7 @@ fun MenuButtons(onProfileClick: () -> Unit = {}, onLogout: () -> Unit = {}) {
                 containerColor = Pink40,
                 contentColor = Color.White
             ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
         ) {
             Text(
                 text = "Keluar",
@@ -193,11 +200,7 @@ fun HomeScreenPreview() {
     val context = LocalContext.current
     val database = AppDatabase.getDatabase(context)
     val userDao = database.userDao()
-
-    // For preview, we need to use a synchronous approach to get data from Room
-    // We'll use runBlocking, but only for preview purposes
     val user = runBlocking {
-        // Try to get the first user from database, or use empty values if none exist
         userDao.getFirstUser() ?: User(
             username = "preview_user",
             password = "password",
@@ -214,7 +217,8 @@ fun HomeScreenPreview() {
             nama = user.nama,
             email = user.email,
             alamat = user.alamat,
-            nomorTelepon = user.nomorTelepon
+            nomorTelepon = user.nomorTelepon,
+            onProfileClick = {}
         )
     }
 }

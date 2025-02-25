@@ -132,15 +132,14 @@ fun ProfileScreen(
                 Button(
                     onClick = {
                         scope.launch {
-                            val updatedUser = User(
+                            userDao.updateUserProfile(
                                 username = username,
-                                password = "", // We don't know the password here, it will be preserved in Room
                                 nama = editedNama,
                                 nomorTelepon = editedNomorTelepon,
                                 email = editedEmail,
                                 alamat = editedAlamat
                             )
-                            userDao.updateUserProfile(updatedUser)
+
                             Toast.makeText(context, "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show()
                             isEditing = false
                         }
@@ -148,6 +147,7 @@ fun ProfileScreen(
                 ) {
                     Text("Simpan")
                 }
+
             }
         } else {
             // View mode

@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.virtualrealm.Kuliah"
-        minSdk = 24
+        minSdk = 29
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -62,5 +62,6 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     implementation ("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.room:room-ktx:2.6.1")
+    implementation("com.google.android.material:material:1.11.0")
     kapt("androidx.room:room-compiler:2.6.1")
 }
