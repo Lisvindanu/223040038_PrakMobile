@@ -1,5 +1,6 @@
 package com.virtualrealm.Kuliah
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -35,15 +36,22 @@ class ProfileActivity : ComponentActivity() {
         val alamat = intent.getStringExtra("ALAMAT") ?: ""
         val nomorTelepon = intent.getStringExtra("NOMOR_TELEPON") ?: ""
 
+        // Read dark mode preference
+        val preferences = getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        // Use system night mode setting as default
+        val systemNightMode = resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        val systemDarkMode = systemNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val useDarkTheme = preferences.getBoolean("dark_mode", systemDarkMode)
+
         setContent {
-            KuliahTheme {
+            KuliahTheme(darkTheme = useDarkTheme) {  // Pass the dark mode setting here
                 Scaffold(
                     topBar = {
                         TopAppBar(
                             title = { Text("Profil Pengguna") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.Filled.ArrowBack, "Kembali")
+                                    Icon(Icons.Filled.ArrowBack, contentDescription = "Kembali")
                                 }
                             }
                         )

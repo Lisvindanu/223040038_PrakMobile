@@ -1,5 +1,5 @@
 package com.virtualrealm.Kuliah
-
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -47,8 +47,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Read dark mode preference without using isSystemInDarkTheme()
+        val preferences = getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        // Use system night mode setting as default instead of isSystemInDarkTheme()
+        val systemNightMode = resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        val systemDarkMode = systemNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val useDarkTheme = preferences.getBoolean("dark_mode", systemDarkMode)
+
         setContent {
-            KuliahTheme {
+            KuliahTheme(darkTheme = useDarkTheme) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     FormLogin(modifier = Modifier.padding(innerPadding))
                 }

@@ -1,5 +1,6 @@
 package com.virtualrealm.Kuliah
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -46,8 +47,13 @@ class HomeActivity : ComponentActivity() {
         val alamat = intent.getStringExtra("ALAMAT") ?: ""
         val nomorTelepon = intent.getStringExtra("NOMOR_TELEPON") ?: ""
 
+        val preferences = getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val systemNightMode = resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        val systemDarkMode = systemNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val useDarkTheme = preferences.getBoolean("dark_mode", systemDarkMode)
+
         setContent {
-            KuliahTheme {
+            KuliahTheme(darkTheme = useDarkTheme) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     HomeScreen(
                         username = username,
