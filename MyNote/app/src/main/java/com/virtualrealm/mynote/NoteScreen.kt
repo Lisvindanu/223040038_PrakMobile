@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -18,28 +19,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.benasher44.uuid.uuid4
 import com.virtualrealm.mynote.models.Note
 import com.virtualrealm.mynote.utils.DateUtil
-import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteScreen(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    val dao = NoteDatabase.getDatabase(context).noteDao()
-    val list: LiveData<List<Note>> = dao.getAllNotes()
-    val notes: List<Note> by list.observeAsState(initial = listOf())
+fun NoteScreen(
+    modifier: Modifier = Modifier,
+    viewModel: NoteViewModel = hiltViewModel()
+) {
+    val notes by viewModel.notes.observeAsState(initial = listOf())
 
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    val scope = rememberCoroutineScope()
 
     // State untuk dialog
     var selectedNote by remember { mutableStateOf<Note?>(null) }
@@ -63,18 +61,12 @@ fun NoteScreen(modifier: Modifier = Modifier) {
         Button(
             onClick = {
                 if (title.isNotEmpty() && description.isNotEmpty()) {
-                    scope.launch {
-                        try {
-                            val noteId = uuid4().toString()
-                            val currentDate = DateUtil.getCurrentJakartaDateTime()
-                            dao.insertNote(Note(noteId, title, description, currentDate))
-                            title = ""
-                            description = ""
-                        } catch (e: Exception) {
-                            // Handle error - dalam aplikasi lengkap Anda bisa menampilkan pesan kesalahan
-                            e.printStackTrace()
-                        }
-                    }
+                    val noteId = uuid4().toString()
+                    val currentDate = DateUtil.getCurrentJakartaDateTime()
+                    val newNote = Note(noteId, title, description, currentDate)
+                    viewModel.insertNote(newNote)
+                    title = ""
+                    description = ""
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -123,27 +115,15 @@ fun NoteScreen(modifier: Modifier = Modifier) {
             note = note,
             onDismiss = { selectedNote = null },
             onDelete = {
-                scope.launch {
-                    try {
-                        dao.deleteNote(note)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    selectedNote = null
-                }
+                viewModel.deleteNote(note)
+                selectedNote = null
             },
             onEdit = { newTitle, newDescription ->
-                scope.launch {
-                    try {
-                        val updatedNote = note.copy(
-                            title = newTitle,
-                            description = newDescription
-                        )
-                        dao.updateNote(updatedNote)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
+                val updatedNote = note.copy(
+                    title = newTitle,
+                    description = newDescription
+                )
+                viewModel.updateNote(updatedNote)
             }
         )
     }

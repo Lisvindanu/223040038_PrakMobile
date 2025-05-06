@@ -1,17 +1,21 @@
 [versions]
-agp = "8.8.0"
-kotlin = "2.0.0"
-coreKtx = "1.15.0"
+agp = "8.8.2"
+kotlin = "2.0.21"
+coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
-composeBom = "2024.04.01"
+composeBom = "2025.04.01"
+composeCompiler = "1.5.15"
 room = "2.7.1"
 ksp = "2.1.20-2.0.0"
 benasher44Uuid= "0.8.4"
-desugarJdkLibs = "2.0.4"
+desugarJdkLibs = "2.1.5"
+daggerHilt = "2.56.1"
+androidxHilt = "1.2.0"
+javaPoet = "1.13.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,12 +37,20 @@ androidx-room-ktx = {group = "androidx.room", name = "room-ktx", version.ref = "
 androidx-room-compiler = {group = "androidx.room", name = "room-compiler", version.ref = "room"}
 androidx-lifecycle-livedata-ktx = {group = "androidx.lifecycle", name= "lifecycle-livedata-ktx", version.ref="lifecycleRuntimeKtx"}
 androidx-compose-runtime-livedata = {group = "androidx.compose.runtime", name= "runtime-livedata"}
+androidx-compose-compiler = {group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler"}
 benasher44-uuid = {group = "com.benasher44", name = "uuid", version.ref ="benasher44Uuid"}
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
+dagger-hilt-android = {group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt"}
+dagger-hilt-compiler = {group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt"}
+squareup-javapoet = {group = "com.squareup", name = "javapoet", version.ref = "javaPoet"}
+androidx-lifecycle-viewmodel-ktx = {group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx"}
+androidx-hilt-navigation-compose = {group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHilt"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 room = {id = "androidx.room", version.ref= "room"}
 ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
+hilt-android = {id = "com.google.dagger.hilt.android", version.ref = "daggerHilt"}
+# Add the Kotlin Compose compiler plugin as mentioned in the documentation
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -1,12 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
+    // Keep your existing configuration
     namespace = "com.virtualrealm.mynote"
     compileSdk = 35
 
@@ -32,7 +34,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-        // Aktifkan desugaring untuk dukungan java.time
         isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
@@ -42,13 +43,23 @@ android {
         compose = true
     }
 
+    composeOptions {
+        // Make sure this matches your Kotlin version
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
+
     room {
-        schemaDirectory("$projectDir/schemas")
+        schemaDirectory("${projectDir}/schemas")
     }
 }
 
-dependencies {
+// Force JavaPoet version if needed
+configurations.all {
+    resolutionStrategy.force("com.squareup:javapoet:1.13.0")
+}
 
+dependencies {
+    // Keep your existing dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -57,6 +68,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,5 +85,12 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.benasher44.uuid)
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    implementation(libs.dagger.hilt.android)
+    ksp(libs.dagger.hilt.compiler)
+    implementation(libs.squareup.javapoet)
+
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
