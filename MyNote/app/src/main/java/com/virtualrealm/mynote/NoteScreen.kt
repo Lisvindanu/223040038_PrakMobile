@@ -34,7 +34,8 @@ fun NoteScreen(
     modifier: Modifier = Modifier,
     viewModel: NoteViewModel = hiltViewModel()
 ) {
-    val notes by viewModel.notes.observeAsState(initial = listOf())
+    // Use observeAsState() for LiveData
+    val notes by viewModel.notes.observeAsState(initial = emptyList())
 
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }

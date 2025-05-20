@@ -16,6 +16,9 @@ desugarJdkLibs = "2.1.5"
 daggerHilt = "2.56.1"
 androidxHilt = "1.2.0"
 javaPoet = "1.13.0"
+sandwich = "2.1.1"
+retrofit = "2.11.0"
+whatif = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +48,10 @@ dagger-hilt-compiler = {group = "com.google.dagger", name = "hilt-compiler", ver
 squareup-javapoet = {group = "com.squareup", name = "javapoet", version.ref = "javaPoet"}
 androidx-lifecycle-viewmodel-ktx = {group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx"}
 androidx-hilt-navigation-compose = {group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHilt"}
+skydoves-sandwich = {group = "com.github.skydoves", name = "sandwich", version.ref = "sandwich"}
+skydoves-sandwich-retrofit = {group = "com.github.skydoves", name = "sandwich-retrofit", version.ref = "sandwich"}
+skydoves-whatif = {group = "com.github.skydoves", name = "whatif", version.ref = "whatif"}
+retrofit-converter-gson = {group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
